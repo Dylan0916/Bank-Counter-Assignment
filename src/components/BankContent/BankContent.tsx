@@ -1,15 +1,19 @@
 import ProcessItem from './ProcessItem';
 import { S } from './styles';
+import { FieldType } from './types';
 
 const names = ['Amy', 'Bob', 'Cory', 'Dora'];
+const headItem = [FieldType.Counter, FieldType.Processing, FieldType.Processed];
 
 export default function BankContent() {
   return (
     <S.Table>
       <S.Tr>
-        <S.Th>counter</S.Th>
-        <S.Th>processing</S.Th>
-        <S.Th>processed</S.Th>
+        {headItem.map(item => (
+          <S.Td isHead type={item} key={item}>
+            {item}
+          </S.Td>
+        ))}
       </S.Tr>
       {names.map(name => (
         <ProcessItem key={name} name={name} />
