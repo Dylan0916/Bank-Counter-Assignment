@@ -9,7 +9,13 @@ interface TdProps {
 }
 
 function getFieldFlex({ type }: TdProps) {
-  return type === FieldType.Processed ? 1 : '0 0 105px';
+  const result = {
+    [FieldType.Counter]: '0 0 90px',
+    [FieldType.Processing]: '0 0 105px',
+    [FieldType.Processed]: 1,
+  };
+
+  return result[type];
 }
 
 export const S = {
