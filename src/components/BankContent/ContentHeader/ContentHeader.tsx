@@ -9,7 +9,7 @@ function ContentHeader() {
   return (
     <S.Tr>
       {headItem.map(item => (
-        <S.Td isHead type={item} key={item}>
+        <S.Td isHead type={item} key={item} data-testid="headItem">
           {item}
         </S.Td>
       ))}
