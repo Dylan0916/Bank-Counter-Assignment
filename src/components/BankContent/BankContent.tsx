@@ -2,12 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { QueueContent } from '../../types/misc';
 import { queueSubject$ } from '../../utils/bankHelpers';
+import ContentHeader from './ContentHeader';
 import ProcessItem from './ProcessItem';
 import { S } from './styles';
-import { FieldType } from './types';
 
 const names: string[] = JSON.parse(process.env.REACT_APP_NAMES + '');
-const headItem = [FieldType.Counter, FieldType.Processing, FieldType.Processed];
 
 export default function BankContent() {
   const [numberPlate, setNumberPlate] = useState(1);
@@ -30,18 +29,6 @@ export default function BankContent() {
   const setQueueCallback = useCallback((value: QueueContent) => {
     setQueue(prev => prev.concat(value).sort((a, b) => a.index - b.index));
   }, []);
-
-  const renderHeader = () => {
-    return (
-      <S.Tr>
-        {headItem.map(item => (
-          <S.Td isHead type={item} key={item}>
-            {item}
-          </S.Td>
-        ))}
-      </S.Tr>
-    );
-  };
 
   const renderContent = () => {
     return names.map((name, index) => (
@@ -77,7 +64,7 @@ export default function BankContent() {
   return (
     <S.Container>
       <S.Table>
-        {renderHeader()}
+        <ContentHeader />
         {renderContent()}
       </S.Table>
       <S.BottomSection>
