@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 
 import { QueueContent } from '../../../types/misc';
 import { queueSubject$ } from '../../../utils/bankHelpers';

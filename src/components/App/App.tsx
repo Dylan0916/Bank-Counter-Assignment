@@ -1,3 +1,5 @@
+import React from 'react';
+
 import BankContent from '../BankContent';
 
 function App() {

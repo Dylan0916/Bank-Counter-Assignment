@@ -20,10 +20,10 @@
   },
   "homepage": "./",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "craco start",
+    "build": "craco build",
     "prettier": "prettier *.ts --write",
-    "test": "react-scripts test",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "importSort": {
@@ -51,7 +51,9 @@
     ]
   },
   "devDependencies": {
+    "@craco/craco": "^6.1.1",
     "@types/styled-components": "^5.1.7",
+    "craco-esbuild": "^0.2.0",
     "import-sort-style-module": "^6.0.0",
     "prettier": "^2.2.1",
     "prettier-plugin-import-sort": "^0.0.6"
