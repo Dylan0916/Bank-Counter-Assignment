@@ -31,7 +31,7 @@ function ProcessItem(props: Readonly<Props>) {
         setProcessing(null);
         setProcessed(prev => prev.concat(processing));
         bankProcess$.next(execute);
-      }, waitSecond * 3000);
+      }, waitSecond * 1000);
     }
   }, [processing, execute]);
 

@@ -28,7 +28,7 @@ export default function BankContent() {
     setNumberPlate(prev => prev + 1);
   };
 
-  const handleSetQueue = useCallback((callback: ExecuteCallback) => {
+  const setQueueCallback = useCallback((callback: ExecuteCallback) => {
     setQueue(prev => prev.concat(callback));
   }, []);
 
@@ -46,7 +46,7 @@ export default function BankContent() {
 
   const renderContent = () => {
     return names.map(name => (
-      <ProcessItem key={name} name={name} setQueue={handleSetQueue} />
+      <ProcessItem key={name} name={name} setQueue={setQueueCallback} />
     ));
   };
 
@@ -59,7 +59,7 @@ export default function BankContent() {
         callback(number!);
         setWaitings(newWaitings);
       } else {
-        handleSetQueue(callback);
+        setQueueCallback(callback);
       }
     });
 
