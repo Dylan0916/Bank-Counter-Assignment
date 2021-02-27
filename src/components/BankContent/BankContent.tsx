@@ -72,7 +72,7 @@ export default function BankContent() {
         process.unsubscribe();
       }
     };
-  }, [waitings]);
+  }, [waitings, setQueueCallback]);
 
   return (
     <S.Container>
