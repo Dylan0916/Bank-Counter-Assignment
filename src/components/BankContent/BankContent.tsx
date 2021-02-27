@@ -6,8 +6,7 @@ import ProcessItem from './ProcessItem';
 import { S } from './styles';
 import { FieldType } from './types';
 
-const names = ['Amy', 'Bob', 'Cory', 'Dora'];
-// const names = ['Amy'];
+const names: string[] = JSON.parse(process.env.REACT_APP_NAMES + '');
 const headItem = [FieldType.Counter, FieldType.Processing, FieldType.Processed];
 
 export default function BankContent() {

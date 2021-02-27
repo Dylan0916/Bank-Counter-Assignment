@@ -25,15 +25,23 @@ function ProcessItem(props: Readonly<Props>) {
   }, []);
 
   useEffect(() => {
+    let timeout: null | NodeJS.Timeout = null;
+
     if (processing !== null) {
       const waitSecond = Math.random() * 1.5 + 0.5;
 
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         setProcessing(null);
         setProcessed(prev => prev.concat(processing));
         queueSubject$.next({ execute, index });
       }, waitSecond * 1000);
     }
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
   }, [processing, execute]);
 
   return (
