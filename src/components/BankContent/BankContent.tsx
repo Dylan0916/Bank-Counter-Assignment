@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { ExecuteCallback } from '../../types/misc';
-import { bankProcess$ } from '../../utils/bankHelpers';
+import { QueueContent } from '../../types/misc';
+import { queueSubject$ } from '../../utils/bankHelpers';
 import ProcessItem from './ProcessItem';
 import { S } from './styles';
 import { FieldType } from './types';
@@ -12,24 +12,24 @@ const headItem = [FieldType.Counter, FieldType.Processing, FieldType.Processed];
 
 export default function BankContent() {
   const [numberPlate, setNumberPlate] = useState(1);
-  const [queue, setQueue] = useState<ExecuteCallback[]>([]);
+  const [queue, setQueue] = useState<QueueContent[]>([]);
   const [waitings, setWaitings] = useState<number[]>([]);
 
   const onNumberPlateClick = () => {
     if (queue.length > 0) {
-      const newQueue = [...queue];
-      const execute = newQueue.shift();
+      const copiedQueue = [...queue];
+      const firstEle = copiedQueue.shift();
 
-      execute!(numberPlate);
-      setQueue(newQueue);
+      firstEle?.execute(numberPlate);
+      setQueue(copiedQueue);
     } else {
       setWaitings(prev => prev.concat(numberPlate));
     }
     setNumberPlate(prev => prev + 1);
   };
 
-  const setQueueCallback = useCallback((callback: ExecuteCallback) => {
-    setQueue(prev => prev.concat(callback));
+  const setQueueCallback = useCallback((value: QueueContent) => {
+    setQueue(prev => prev.concat(value).sort((a, b) => a.index - b.index));
   }, []);
 
   const renderHeader = () => {
@@ -45,21 +45,26 @@ export default function BankContent() {
   };
 
   const renderContent = () => {
-    return names.map(name => (
-      <ProcessItem key={name} name={name} setQueue={setQueueCallback} />
+    return names.map((name, index) => (
+      <ProcessItem
+        key={name}
+        name={name}
+        index={index}
+        setQueue={setQueueCallback}
+      />
     ));
   };
 
   useEffect(() => {
-    const process = bankProcess$.subscribe(callback => {
+    const process = queueSubject$.subscribe(({ execute, index }) => {
       if (waitings.length > 0) {
-        const newWaitings = [...waitings];
-        const number = newWaitings.shift();
+        const copiedWaitings = [...waitings];
+        const number = copiedWaitings.shift();
 
-        callback(number!);
-        setWaitings(newWaitings);
+        execute(number!);
+        setWaitings(copiedWaitings);
       } else {
-        setQueueCallback(callback);
+        setQueueCallback({ execute, index });
       }
     });
 

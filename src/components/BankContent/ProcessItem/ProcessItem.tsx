@@ -1,17 +1,18 @@
 import { memo, useEffect, useState } from 'react';
 
-import { ExecuteCallback } from '../../../types/misc';
-import { bankProcess$ } from '../../../utils/bankHelpers';
+import { QueueContent } from '../../../types/misc';
+import { queueSubject$ } from '../../../utils/bankHelpers';
 import { S } from '../styles';
 import { FieldType } from '../types';
 
 interface Props {
   name: string;
-  setQueue: (callback: ExecuteCallback) => void;
+  index: number;
+  setQueue: (value: QueueContent) => void;
 }
 
 function ProcessItem(props: Readonly<Props>) {
-  const { name, setQueue } = props;
+  const { name, index, setQueue } = props;
   const [processing, setProcessing] = useState<number | null>(null);
   const [processed, setProcessed] = useState<number[]>([]);
 
@@ -20,7 +21,7 @@ function ProcessItem(props: Readonly<Props>) {
   };
 
   useEffect(() => {
-    setQueue(execute);
+    setQueue({ execute, index });
   }, []);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ function ProcessItem(props: Readonly<Props>) {
       setTimeout(() => {
         setProcessing(null);
         setProcessed(prev => prev.concat(processing));
-        bankProcess$.next(execute);
+        queueSubject$.next({ execute, index });
       }, waitSecond * 1000);
     }
   }, [processing, execute]);

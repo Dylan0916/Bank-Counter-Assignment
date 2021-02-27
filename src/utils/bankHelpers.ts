@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
 
-import { ExecuteCallback } from '../types/misc';
+import { QueueContent } from '../types/misc';
 
-export const bankProcess$ = new Subject<ExecuteCallback>();
+export const queueSubject$ = new Subject<QueueContent>();

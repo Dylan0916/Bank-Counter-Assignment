@@ -1,1 +1,6 @@
-export type ExecuteCallback = (number: number) => void;
+type ExecuteCallback = (number: number) => void;
+
+export interface QueueContent {
+  index: number;
+  execute: ExecuteCallback;
+}
