@@ -1,23 +1,36 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
+import { ExecuteCallback } from '../../types/misc';
 import { bankProcess$ } from '../../utils/bankHelpers';
 import ProcessItem from './ProcessItem';
 import { S } from './styles';
 import { FieldType } from './types';
 
-// const names = ['Amy', 'Bob', 'Cory', 'Dora'];
-const names = ['Amy'];
+const names = ['Amy', 'Bob', 'Cory', 'Dora'];
+// const names = ['Amy'];
 const headItem = [FieldType.Counter, FieldType.Processing, FieldType.Processed];
 
 export default function BankContent() {
   const [numberPlate, setNumberPlate] = useState(1);
-  const queue = useRef<number[]>([]);
+  const [queue, setQueue] = useState<ExecuteCallback[]>([]);
   const [waitings, setWaitings] = useState<number[]>([]);
 
   const onNumberPlateClick = () => {
-    setWaitings(prev => prev.concat(numberPlate));
+    if (queue.length > 0) {
+      const newQueue = [...queue];
+      const execute = newQueue.shift();
+
+      execute!(numberPlate);
+      setQueue(newQueue);
+    } else {
+      setWaitings(prev => prev.concat(numberPlate));
+    }
     setNumberPlate(prev => prev + 1);
   };
+
+  const handleSetQueue = useCallback((callback: ExecuteCallback) => {
+    setQueue(prev => prev.concat(callback));
+  }, []);
 
   const renderHeader = () => {
     return (
@@ -32,14 +45,30 @@ export default function BankContent() {
   };
 
   const renderContent = () => {
-    return names.map(name => {
-      return <ProcessItem key={name} name={name} />;
-    });
+    return names.map(name => (
+      <ProcessItem key={name} name={name} setQueue={handleSetQueue} />
+    ));
   };
 
   useEffect(() => {
-    // bankProcess$.subscribe(({ queueList }) => {});
-  }, []);
+    const process = bankProcess$.subscribe(callback => {
+      if (waitings.length > 0) {
+        const newWaitings = [...waitings];
+        const number = newWaitings.shift();
+
+        callback(number!);
+        setWaitings(newWaitings);
+      } else {
+        handleSetQueue(callback);
+      }
+    });
+
+    return () => {
+      if (process) {
+        process.unsubscribe();
+      }
+    };
+  }, [waitings]);
 
   return (
     <S.Container>
