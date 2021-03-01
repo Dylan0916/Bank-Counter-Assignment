@@ -25,12 +25,12 @@ function ProcessItem(props: Readonly<Props>) {
   }, []);
 
   useEffect(() => {
-    let timeout: null | NodeJS.Timeout = null;
+    let timeout: null | number = null;
 
     if (processing !== null) {
-      const waitSecond = Math.random() * 1.5 + 0.5;
+      const waitSecond = Math.random() * 1 + 0.5;
 
-      timeout = setTimeout(() => {
+      timeout = window.setTimeout(() => {
         setProcessing(null);
         setProcessed(prev => prev.concat(processing));
         queueSubject$.next({ execute, index });
