@@ -47,7 +47,9 @@ export default function BankContent() {
         const copiedWaitings = [...waitings];
         const number = copiedWaitings.shift();
 
-        execute(number!);
+        if (typeof number !== 'undefined') {
+          execute(number);
+        }
         setWaitings(copiedWaitings);
       } else {
         setQueueCallback({ execute, index });
